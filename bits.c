@@ -296,7 +296,69 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  return 0;
+  int mov = 0;
+  int current = 16;
+
+  int x1 = x >> current;
+  int test = (!x1) | !(x1+1);
+  int new = 8 ;
+  int flag = test + ~1 + 1;
+  //current = current + (~flag & new) | (flag& (~new+1));
+  int tmp = (flag & new) | (~flag &(~new + 1));
+  int tmp1 = current + tmp ;
+  current = tmp1;
+
+  x1 = x >> current;
+  test = (!x1) | !(x1+1);
+  new = 4 ; 
+  flag = test + ~1 + 1;
+  //current = current + (~flag & new) | (flag & (~new+1));
+  tmp = (flag & new) | (~flag &(~new + 1));
+  tmp1 = current + tmp ;
+  current = tmp1;
+
+
+  x1 = x >> current;
+  test = (!x1) | !(x1+1);
+  new = 2 ;
+  flag = test + ~1 + 1 ;
+  //current = current + (~flag & new) | (flag & (~new+1));
+  tmp = (flag & new) | (~flag &(~new + 1));
+  tmp1 = current + tmp ;
+  current = tmp1;
+  
+  x1 = x >> current;
+  test = (!x1) | !(x1+1);
+  new = 1 ;
+  flag = test + ~1 + 1;
+  //current = current + (~flag & new) | (flag & (~new+1));
+  tmp = (flag & new) | (~flag &(~new + 1));
+  tmp1 = current + tmp ;
+  current = tmp1;
+
+  x1 = x >> current;
+  //printf("final-current-value = %d\n",current);
+  int test2 = (!x1) | !(x1+1);
+  //new = 1 ;
+  int flag2 = test2 + ~1 + 1;
+  //printf("test2=%d,flag2=%d\n",test2,flag2);
+  //current = current + (flag & (~new + 1));
+  //tmp = (~flag & new); 
+  //tmp1 = current + tmp ;
+  //current = tmp1;
+  
+  tmp = flag2 & 1; 
+  //printf("0/-1 flag = %d\n",tmp);
+  int all_bit_same_flag = !((!x) | !(x+1));
+  int res = current + tmp + (1 & all_bit_same_flag); 
+  //tmp = res;
+  //int i = ~(~!tmp+1);
+  //int j = i & tmp;
+  //int k = ~i & 1;
+  //res = j | k;
+
+  //printf("x=%d,res=%d\n\n",x,res);
+  return res;
 }
 //float
 /* 
