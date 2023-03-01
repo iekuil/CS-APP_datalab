@@ -172,7 +172,17 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-
+	int rev_x = ~x;
+	volatile int tmp = rev_x;
+	volatile int tmp1 = tmp + rev_x;
+	int tmp2 = x + 1;
+	int a1 = !tmp2;
+	int a2 = !a1;
+	int tmp3 = (!tmp1) & a2;
+	//printf("x=%x,tmp=%x,tmp1=%x,res=%x\n\n",x,tmp,tmp1,tmp3);
+	//printf("1\n");
+	//printf("x=%x,res=%x\n\n",x,tmp3);
+	return tmp3;
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
