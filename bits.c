@@ -473,5 +473,47 @@ int floatFloat2Int(unsigned uf) {
  *   Rating: 4
  */
 unsigned floatPower2(int x) {
-    return 2;
+	int sig_x = x >> 31;
+	
+	if (!sig_x)
+	{
+		int range_x = x + (~127) ;
+		if ( range_x >> 31 )
+		{
+			int res = ( x + 127 ) << 23 ;
+			//printf("1.x=%d,res=%x\n\n",x,res);
+			return res;
+		}
+		else
+		{
+			//printf("2.x=%d,res=%x\n\n",x,0xFF << 23);
+			return 0xFF << 23;
+		}
+	}
+	else
+	{
+		int abs_x = (~x) + 1;
+		int comp_149 = 149 + (~abs_x) + 1;
+		if (comp_149 >> 31)
+		{
+			//printf("3.x=%d,res=0\n\n",x);
+			return 0;
+		}
+		int comp_126 = abs_x + (~126) + 1;
+		if (comp_126 >> 31)
+		{
+			int E = 127 + x;
+			//printf("4.x=%d,res=%x\n\n",x,E<<23);
+			return E << 23;
+		}
+		else
+		{
+			int exp = 1 << 23;
+			//printf("5.x=%d,res=%x\n\n",x,exp>>comp_126);
+			return exp >> comp_126;
+		}
+
+	}
+
+
 }
