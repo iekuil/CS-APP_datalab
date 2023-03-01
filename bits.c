@@ -421,7 +421,43 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  return 2;
+	unsigned sig_mask = 1 << 31;
+	unsigned sig = (sig_mask) & uf;
+	unsigned minus_bias = (~127)+1;
+	unsigned exp = (uf & ~(sig_mask)) >> 23;
+	unsigned E = exp + minus_bias ;
+	if (E >> 31)
+	{
+	//	printf("1.uf=%x,res=0\n\n",uf);
+		return 0;
+	}
+	unsigned minus_thirty = (~30) + 1;
+	if ( !((E + minus_thirty) >> 31))
+	{
+	//	printf("2.uf=%x,res=0x80000000\n\n",uf);
+		return 0x80000000u;
+	}
+
+	unsigned minus_23 = (~23) + 1;
+
+	unsigned mask = ~((sig_mask) + (0xFF << 23));
+	unsigned frac = (1<<23) + (uf & mask);
+	unsigned res;
+	unsigned E_less_than_23 = E + minus_23;
+	if ( (E_less_than_23) >> 31)
+	{
+		unsigned dist = (~E_less_than_23)+1;
+		res = frac >> dist;
+	}
+	else
+	{
+		unsigned dist = E_less_than_23;
+		res = frac << dist;
+	}
+	if ( sig )
+		res = (~res) + 1;
+	//printf("3.uf=%x,res=%x\n\n",uf,res);	
+	return res;
 }
 /* 
  * floatPower2 - Return bit-level equivalent of the expression 2.0^x
