@@ -373,7 +373,40 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  return 2;
+  unsigned int i = (uf&(~(1<<31)))>>23;
+  unsigned int j = !(i^0xFF);
+
+  if (j)
+  {
+    //printf("1.uf = %0x, res = %0x\n\n",uf,uf);
+    return uf;
+  }
+  
+  if (!i)
+  {
+    unsigned int k = uf << 1;
+    unsigned int l = !k;
+    if (l)
+    {
+      
+      //printf("2.uf = %0x, res = %0x\n\n",uf,uf);
+      return uf;
+    }
+    //printf("3.uf = %0x, res = %0x\n\n",uf,k+(uf&(1<<31)));
+    return k + (uf & (1<<31));
+  }
+  i = i + 1;
+  unsigned int m = !(i^0xFF);
+
+  if (m)
+  {
+    //printf("4.uf = %0x, res = %0x\n\n",uf,(i<<23)+uf&(1<<31));
+    return (i << 23) + (uf & (1<<31));
+  }
+
+
+  //printf("5.uf = %0x, res = %0x\n\n",uf,uf+(1<<23));
+  return uf + (1<<23);
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
